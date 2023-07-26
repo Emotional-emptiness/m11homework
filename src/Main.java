@@ -1,8 +1,6 @@
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import java.util.Iterator;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -31,7 +29,7 @@ public class Main {
         Stream<Long> randomStream = linearCongruentialGenerator(a, c, m, seed);
         randomStream.limit(10).forEach(System.out::println);
 
-       
+
         Stream<String> stream1 = Stream.of("a", "b", "c");
         Stream<String> stream2 = Stream.of("x", "y", "z");
 
@@ -42,7 +40,7 @@ public class Main {
 
     public static String formatNames(List<String> names) {
         return IntStream.range(0, names.size())
-                .filter(i -> i % 2 == 0)
+                .filter(i -> i % 2 != 0)
                 .mapToObj(i -> (i / 2 + 1) + ". " + names.get(i))
                 .collect(Collectors.joining(", "));
     }
@@ -71,20 +69,15 @@ public class Main {
     public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
         Iterator<T> iterator1 = first.iterator();
         Iterator<T> iterator2 = second.iterator();
+        List<T> result = new ArrayList<>();
 
-        Stream.Builder<T> builder = Stream.builder();
-
-        while (iterator1.hasNext() || iterator2.hasNext()) {
-            if (iterator1.hasNext()) {
-                builder.accept(iterator1.next());
-            }
-
-            if (iterator2.hasNext()) {
-                builder.accept(iterator2.next());
-            }
+        while (iterator1.hasNext() && iterator2.hasNext()) {
+            result.add(iterator1.next());
+            result.add(iterator2.next());
         }
+        Collections.shuffle(result);
 
-        return builder.build();
+        return result.stream();
     }
 
 }
